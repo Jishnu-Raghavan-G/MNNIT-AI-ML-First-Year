@@ -700,19 +700,24 @@ This repository is **not an official MNNIT repository** and should not be interp
 
 ## Citation
 
-If referencing the course lecture material:
+The AI/ML concepts and course structure in this repository are based on academic lecture material from the:
 
-> Kumar, Abhinav. *Introduction to Machine Learning / Introduction to AI-ML*. Department of Computer Science and Engineering, Motilal Nehru National Institute of Technology Allahabad. Course lecture slides.
+**Department of Computer Science and Engineering**  
+**Motilal Nehru National Institute of Technology Allahabad (MNNIT Allahabad)**
+
+**Reference:** *Introduction to Machine Learning / Introduction to AI-ML*. Course lecture slides, Department of Computer Science and Engineering, Motilal Nehru National Institute of Technology Allahabad.
+
+The lecture material is acknowledged as the academic source for the course-derived concepts covered in this repository.
 
 If referencing the notes, code, experiments, or projects in this repository, please cite the repository separately as a personal learning and implementation resource.
 
 ## Academic Integrity
 
-Attribution is provided wherever the repository is based on course material.
+Attribution is provided wherever the repository is based on course material from the Department of Computer Science and Engineering, MNNIT Allahabad.
 
-The notes have been intentionally rewritten and reorganized rather than reproducing the lecture slides verbatim. The implementations and experiments are included as learning exercises.
+The notes have been intentionally **rewritten, reorganized, and expanded in my own words** rather than reproducing the lecture slides verbatim. The implementations, experiments, projects, and code are independently written as learning exercises.
 
-The purpose of this repository is to document my own understanding and practical work while acknowledging the academic source that introduced the underlying course concepts.
+The purpose of this repository is to document my own understanding and practical work while acknowledging the academic source material that provided the foundation for the course-derived concepts.
 
 ## Objectives
 
@@ -737,19 +742,22 @@ The repository may continue to evolve with improved implementations, experiments
 
 ## Acknowledgements
 
-Special acknowledgement to:
+Special acknowledgement to the:
 
-**Dr. Abhinav Kumar**  
-Assistant Professor  
-Department of Computer Science and Engineering  
-Motilal Nehru National Institute of Technology Allahabad
+**Department of Computer Science and Engineering**  
+**Motilal Nehru National Institute of Technology Allahabad (MNNIT Allahabad)**
 
-for the course lecture material that served as the primary academic reference for the course-derived concepts documented here.
+for providing the academic course material that served as the primary reference for the course-derived concepts documented in this repository.
 
 **Institution:** Motilal Nehru National Institute of Technology Allahabad (MNNIT Allahabad)
 
 ## License
 
+This project is licensed under the **MIT License**.
+
+The MIT License applies to my original repository content, including my notes, source code, experiments, projects, and organization.
+
+Third-party materials and course materials referenced or acknowledged in this repository remain subject to their respective ownership and licensing terms.
 This project is licensed under the **MIT License**.
 
 The MIT License applies to my original repository content, including my notes, source code, experiments, projects, and organization.
