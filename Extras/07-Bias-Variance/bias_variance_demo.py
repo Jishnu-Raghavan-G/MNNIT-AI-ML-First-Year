@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -8,9 +9,6 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 def generate_dataset():
-    """
-    Generate a nonlinear dataset with noise.
-    """
     rng = np.random.default_rng(42)
 
     X = np.linspace(-3, 3, 80).reshape(-1, 1)
@@ -21,11 +19,7 @@ def generate_dataset():
         + X.ravel()
     )
 
-    noise = rng.normal(
-        loc=0.0,
-        scale=2.0,
-        size=len(X)
-    )
+    noise = rng.normal(0, 2, len(X))
 
     y = true_function + noise
 
@@ -33,11 +27,7 @@ def generate_dataset():
 
 
 def create_model(degree):
-    """
-    Create polynomial regression model
-    of the requested degree.
-    """
-    return make_pipeline(
+    model = make_pipeline(
         PolynomialFeatures(
             degree=degree,
             include_bias=False
@@ -45,29 +35,22 @@ def create_model(degree):
         LinearRegression()
     )
 
+    return model
 
-def evaluate_degree(
+
+def evaluate_model(
     degree,
     X_train,
     X_test,
     y_train,
     y_test
 ):
-    """Train and evaluate one polynomial degree."""
     model = create_model(degree)
 
-    model.fit(
-        X_train,
-        y_train
-    )
+    model.fit(X_train, y_train)
 
-    train_predictions = model.predict(
-        X_train
-    )
-
-    test_predictions = model.predict(
-        X_test
-    )
+    train_predictions = model.predict(X_train)
+    test_predictions = model.predict(X_test)
 
     train_mse = mean_squared_error(
         y_train,
@@ -79,26 +62,11 @@ def evaluate_degree(
         test_predictions
     )
 
-    return model, train_mse, test_mse
+    return train_mse, test_mse
 
 
-def classify_fit(train_mse, test_mse):
-    """
-    Provide a simple qualitative interpretation.
+def main():
 
-    This is a teaching heuristic, not a statistical test.
-    """
-    if train_mse > test_mse * 1.5:
-        return "Possible underfitting"
-
-    if test_mse > train_mse * 2:
-        return "Possible overfitting"
-
-    return "Reasonable generalization"
-
-
-def run_experiment():
-    """Compare models with different complexities."""
     X, y = generate_dataset()
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -108,36 +76,17 @@ def run_experiment():
         random_state=42
     )
 
-    degrees = [
-        1,
-        2,
-        3,
-        5,
-        10,
-        15
-    ]
+    degrees = [1, 2, 3, 5, 10, 15]
 
-    results = []
+    train_errors = []
+    test_errors = []
 
-    print("=== BIAS-VARIANCE EXPERIMENT ===")
-
-    print(
-        "\nComparing polynomial models "
-        "of different degrees."
-    )
-
-    print(
-        "\n"
-        f"{'Degree':>8}"
-        f"{'Train MSE':>15}"
-        f"{'Test MSE':>15}"
-        f"{'Interpretation':>25}"
-    )
-
-    print("-" * 63)
+    print("BIAS-VARIANCE EXPERIMENT")
+    print()
 
     for degree in degrees:
-        _, train_mse, test_mse = evaluate_degree(
+
+        train_mse, test_mse = evaluate_model(
             degree,
             X_train,
             X_test,
@@ -145,94 +94,72 @@ def run_experiment():
             y_test
         )
 
-        interpretation = classify_fit(
-            train_mse,
-            test_mse
-        )
-
-        results.append({
-            "degree": degree,
-            "train_mse": train_mse,
-            "test_mse": test_mse
-        })
+        train_errors.append(train_mse)
+        test_errors.append(test_mse)
 
         print(
-            f"{degree:>8}"
-            f"{train_mse:>15.4f}"
-            f"{test_mse:>15.4f}"
-            f"{interpretation:>25}"
+            "Degree:",
+            degree,
+            "| Train MSE:",
+            round(train_mse, 4),
+            "| Test MSE:",
+            round(test_mse, 4)
         )
 
-    return results
+    best_index = np.argmin(test_errors)
+    best_degree = degrees[best_index]
 
-
-def find_best_test_model(results):
-    """Find the model with the lowest test MSE."""
-    best = min(
-        results,
-        key=lambda item: item["test_mse"]
-    )
-
-    print("\n=== BEST TEST PERFORMANCE ===")
+    print()
+    print("BEST TEST PERFORMANCE")
+    print("Best polynomial degree:", best_degree)
     print(
-        f"Polynomial degree: "
-        f"{best['degree']}"
-    )
-    print(
-        f"Test MSE: "
-        f"{best['test_mse']:.4f}"
+        "Best test MSE:",
+        round(test_errors[best_index], 4)
     )
 
-    return best
+    print()
+    print("Creating graph...")
 
+    plt.figure(figsize=(10, 6))
 
-def explain_results(results):
-    """Print the main bias-variance interpretation."""
-    print("\n=== INTERPRETATION ===")
-
-    lowest_train = min(
-        results,
-        key=lambda item: item["train_mse"]
+    plt.plot(
+        degrees,
+        train_errors,
+        marker="o",
+        label="Training MSE"
     )
 
-    lowest_test = min(
-        results,
-        key=lambda item: item["test_mse"]
+    plt.plot(
+        degrees,
+        test_errors,
+        marker="o",
+        label="Test MSE"
     )
 
-    print(
-        "Lowest training MSE:"
-        f" degree {lowest_train['degree']}"
+    plt.xlabel("Polynomial Degree")
+    plt.ylabel("Mean Squared Error")
+
+    plt.title(
+        "Bias-Variance Tradeoff: "
+        "Training vs Test Error"
     )
 
-    print(
-        "Lowest test MSE:"
-        f" degree {lowest_test['degree']}"
+    plt.xticks(degrees)
+
+    plt.grid(True, alpha=0.3)
+
+    plt.legend()
+
+    plt.tight_layout()
+
+    plt.savefig(
+        "bias_variance_graph.png",
+        dpi=300
     )
 
-    print(
-        "\nAs model complexity increases, "
-        "training error can decrease."
-    )
+    print("Graph saved as bias_variance_graph.png")
 
-    print(
-        "However, excessive complexity can "
-        "increase test error because the model "
-        "may begin fitting noise."
-    )
-
-    print(
-        "\nThe goal is good generalization, "
-        "not simply the lowest training error."
-    )
-
-
-def main():
-    results = run_experiment()
-
-    find_best_test_model(results)
-
-    explain_results(results)
+    plt.show()
 
 
 if __name__ == "__main__":
